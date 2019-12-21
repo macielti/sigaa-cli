@@ -6,6 +6,7 @@ actions inside the SIGAA platform, independent of the university.
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
    
    code
 
