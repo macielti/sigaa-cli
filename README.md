@@ -4,6 +4,10 @@ Módulo Python (não oficial) para servir como base para o desenvolvimento de um
 
 Com o desenvolvimento de uma interface de linha de comando ou até mesmo uma aplicação com interface gráfica poderemos assim utilizar o SIGAA com redução, em um certo grau, dos problemas gerados por uma internet de baixa qualidade ou de inconsistências na compatibilidade com navegadores.
 
+## Documentation
+
+The documentation is [here](https://sigaa-cli.readthedocs.io)
+
 ## Installation
 
 Run the following to install:
@@ -31,5 +35,3 @@ Funcionalidades Previstas:
 	- [ ] A partir do código de uma turma ativa do estudante, poder gerar uma lista de tarefas daquela determinada turma, extraindo informações referente a prazos.
 
 **Mais funcionalidades serão adicionadas a medida que as já propostas forem entregues.**
-
-**Documentaçao em breve...**
