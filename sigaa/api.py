@@ -13,6 +13,38 @@ class API:
         self._domain = domain
         self.__session = API.generate_session(self._domain)
 
+    def authenticate(self, username, passwd):
+        """
+        Method to authenticate the :attr:`sigaacli.API.session`.
+
+        :param username: The username of the student.
+        :type username: String
+        :param passwd: The password of the student.
+        :type passwd: String
+
+        :return: **True** for success or **False** for failure.
+        :rtype: **Boolean**
+
+        Example of usage:
+
+        >>> api = API("sigaa.ufpi.br")
+        >>> api.authenticate('foo', 'bar')
+        False
+        """
+
+        url = 'https://%s/sigaa/logar.do?dispatch=logOn' % self.domain
+        pyload = {
+            'user.login':username,
+            'user.senha':passwd
+        }
+
+        r = self.__session.post(url, data=pyload, stream=True)
+        
+        if "Usuário e/ou senha inválidos" not in r.text:
+            return True
+            
+        return False
+
     @staticmethod
     def generate_session(domain):
         """
@@ -40,37 +72,6 @@ class API:
         """
         
         session = requests.Session()
-        session.get(f"https://{domain}/sigaa/verTelaLogin.do", allow_redirects=True, stream=True)
+        session.get("https://%s/sigaa/verTelaLogin.do" % domain, allow_redirects=True, stream=True)
         return session
     
-    def authenticate(self, username, passwd):
-        """
-        Method to authenticate the :attr:`sigaacli.API.session`.
-
-        :param username: The username of the student.
-        :type username: String
-        :param passwd: The password of the student.
-        :type passwd: String
-
-        :return: **True** for success or **False** for failure.
-        :rtype: **Boolean**
-
-        Example of usage:
-
-        >>> api = API("sigaa.ufpi.br")
-        >>> api.authenticate('foo', 'bar')
-        False
-        """
-
-        url = f'https://{self._domain}/sigaa/logar.do?dispatch=logOn'
-        pyload = {
-            'user.login':username,
-            'user.senha':passwd
-        }
-
-        r = self.__session.post(url, data=pyload, stream=True)
-        
-        if "Usuário e/ou senha inválidos" not in r.text:
-            return True
-            
-        return False
