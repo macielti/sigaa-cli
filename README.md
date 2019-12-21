@@ -1,6 +1,4 @@
-# sigaa-cli
-
-Documentation build status: [![Build Status](https://travis-ci.com/macielti/sigaa-cli.svg?branch=master)](https://travis-ci.com/macielti/sigaa-cli)
+# sigaa-cli [![Build Status](https://travis-ci.com/macielti/sigaa-cli.svg?branch=master)](https://travis-ci.com/macielti/sigaa-cli)
 
 Módulo Python (não oficial) para servir como base para o desenvolvimento de um Command Line Interface para a plataforma SIGAA.
 
