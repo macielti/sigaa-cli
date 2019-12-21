@@ -8,7 +8,6 @@ setup(
     version='0.1.0',
     description='A uniffical Comand Line Interface that enable developers to execute some actions inside the SIGAA platform using python code. Independent of the university.',
     long_description=long_description,
-    long_description_content_type='text/markdown',
     packages=find_packages(),
     url="https://github.com/macielti/sigaa-cli",
     author="Bruno do Nascimento Maciel",
