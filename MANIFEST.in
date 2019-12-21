@@ -1,0 +1,4 @@
+include LICENSE
+include poetry.lock
+include poetry.toml
+include sigaa
