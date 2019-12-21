@@ -16,6 +16,17 @@ Execute on you system to install::
 
     pip install sigaa-cli
 
+Simple Authentication Example::
+
+    from sigaa import API
+
+    api = API() # will use 'sigaa.ufpi.br' as default domain
+
+    # return's True if the login data is correct or False if not
+    api.authenticate('username', 'passwd') 
+
+
+
 Contact
 #######
 
