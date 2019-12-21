@@ -33,7 +33,7 @@ class API:
         False
         """
 
-        url = 'https://%s/sigaa/logar.do?dispatch=logOn' % self.domain
+        url = 'https://%s/sigaa/logar.do?dispatch=logOn' % self._domain
         pyload = {
             'user.login':username,
             'user.senha':passwd
@@ -57,22 +57,50 @@ class API:
         :return: An unauthenticated session.
         :rtype: **requests.Session()**
 
+        :raises NotValidDomain: An error occurred when a not valid sigaa platform domain is suplied as positional parameter.
+
         Examples of usage:
 
+        >>> from sigaa.api import API
         >>> session = API.generate_session("sigaa.ufpi.br")
         >>> session.cookies.keys()
         ['JSESSIONID']
 
         SIGAA Mobile:
 
+        >>> from sigaa.api import API
         >>> session = API.generate_session("sig.ufob.edu.br")
         >>> session.cookies.keys()
         ['JSESSIONID']
+
+        Exception raised on invalid domain:
+
+        >>> from sigaa.api import API
+        >>> API.generate_session("google.com")
+        Traceback (most recent call last):
+         ...
+        sigaa.api.NotValidDomain: Not valid sigaa platform domain.
 
         :todo: Verify if the domain points to a really valid SIGAA platform.
         """
         
         session = requests.Session()
-        session.get("https://%s/sigaa/verTelaLogin.do" % domain, allow_redirects=True, stream=True)
+        r = session.get("https://%s/sigaa/verTelaLogin.do" % domain, allow_redirects=True, stream=True)
+
+        # verify if the domain really apoint to a valid SIGAA platform.
+        if 'SIGAA' not in r.text:
+            raise NotValidDomain("Not valid sigaa platform domain.")
+
         return session
-    
+
+class NotValidDomain(Exception):
+    """
+    Is raised when a not valid sigaa platform domain is suplied 
+    as parameter to the sigaa.API.generate_session() static method.
+    """
+    def __init___(self, message):
+        super(NotValidDomain, self).__init__(message)
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()

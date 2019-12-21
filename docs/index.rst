@@ -7,7 +7,7 @@ actions inside the SIGAA platform, independent of the university.
 .. toctree::
    :maxdepth: 2
    
-   code
+   api
 
 Instalation
 ###########
@@ -18,14 +18,12 @@ Execute on you system to install::
 
 Simple Authentication Example::
 
-    from sigaa import API
+    from sigaa.api import API
 
     api = API() # will use 'sigaa.ufpi.br' as default domain
 
     # return's True if the login data is correct or False if not
-    api.authenticate('username', 'passwd') 
-
-
+    api.authenticate('username', 'passwd')
 
 Contact
 #######
