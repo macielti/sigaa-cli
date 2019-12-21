@@ -1,5 +1,5 @@
 Usage Documentation
 ==========================
 
-.. autoclass:: sigaacli.API
+.. autoclass:: sigaa.API
     :members:
