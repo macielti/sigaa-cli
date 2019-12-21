@@ -1,4 +1,4 @@
-# sigaa-cli [![Build Status](https://travis-ci.com/macielti/sigaa-cli.svg?branch=master)](https://travis-ci.com/macielti/sigaa-cli) ![Python 3.5, 3.6, 3.7](https://img.shields.io/badge/python-3.5%2C%203.6%2C%203.7-blue.svg)
+# sigaa-cli [![Build Status](https://travis-ci.com/macielti/sigaa-cli.svg?branch=master)](https://travis-ci.com/macielti/sigaa-cli) ![Python 2.7, 3.5, 3.6, 3.7](https://img.shields.io/badge/python-2.7%2C%203.5%2C%203.6%2C%203.7-blue.svg)
 
 Módulo Python (não oficial) para servir como base para o desenvolvimento de um Command Line Interface para a plataforma SIGAA.
 
