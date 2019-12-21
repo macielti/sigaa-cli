@@ -5,7 +5,7 @@ with open('README.md','r') as fh:
 
 setup(
     name='sigaa-cli',
-    version='0.1.2',
+    version='0.1.3',
     description='A uniffical Comand Line Interface that enable developers to execute some actions inside the SIGAA platform using python code. Independent of the university.',
     long_description=long_description,
     packages=find_packages(),

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sigaa-cli"
-version = "0.1.2"
+version = "0.1.3"
 description = "A uniffical Comand Line Interface that enable developers to execute some actions inside the SIGAA platform using python code. Independent of the university."
 license = "GPL-3.0-or-later"
 authors = ["Bruno do Nascimento Maciel"]
