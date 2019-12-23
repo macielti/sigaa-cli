@@ -1,11 +1,12 @@
 from setuptools import find_packages, setup
+import poetry_version
 
 with open('README.md','r') as fh:
     long_description = fh.read()
 
 setup(
     name='sigaa-cli',
-    version='0.2.3',
+    version=poetry_version.extract(source_file="pyproject.toml"), 
     description='A uniffical Comand Line Interface that enable developers to execute some actions inside the SIGAA platform using python code. Independent of the university.',
     long_description=long_description,
     packages=find_packages(),
