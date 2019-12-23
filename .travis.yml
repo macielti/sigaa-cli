@@ -8,4 +8,4 @@ cache: pip
 install:
   - pip install requests
 script:
-  - python sigaa/api.py
+  - python tests/test_api.py

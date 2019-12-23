@@ -1,4 +1,3 @@
-# encoding: utf-8
 import requests
 
 class API:
@@ -25,12 +24,6 @@ class API:
 
         :return: **True** for success or **False** for failure.
         :rtype: **Boolean**
-
-        Example of usage:
-
-        >>> api = API("sigaa.ufpi.br")
-        >>> api.authenticate('foo', 'bar')
-        False
         """
 
         url = 'https://%s/sigaa/logar.do?dispatch=logOn' % self._domain
@@ -41,10 +34,20 @@ class API:
 
         r = self.__session.post(url, data=pyload, stream=True)
         
-        if "Usuário e/ou senha inválidos" not in r.text:
+        if "rio e/ou senha inv" not in r.text:
             return True
             
         return False
+    
+    def get_sesson_id(self):
+        """
+        Method that returns a dictionary with the JSESSIONID and cookies.
+
+        :return: A cookie dictionary.
+        :rtype: dict
+        """
+        return self.__session.cookies.get_dict()
+
 
     @staticmethod
     def generate_session(domain):
@@ -58,30 +61,6 @@ class API:
         :rtype: **requests.Session()**
 
         :raises NotValidDomain: An error occurred when a not valid sigaa platform domain is suplied as positional parameter.
-
-        Examples of usage:
-
-        >>> from sigaa.api import API
-        >>> session = API.generate_session("sigaa.ufpi.br")
-        >>> session.cookies.keys()
-        ['JSESSIONID']
-
-        SIGAA Mobile:
-
-        >>> from sigaa.api import API
-        >>> session = API.generate_session("sig.ufob.edu.br")
-        >>> session.cookies.keys()
-        ['JSESSIONID']
-
-        Exception raised on invalid domain:
-
-        >>> from sigaa.api import API
-        >>> API.generate_session("google.com")
-        Traceback (most recent call last):
-         ...
-        sigaa.api.NotValidDomain: Not valid sigaa platform domain.
-
-        :todo: Verify if the domain points to a really valid SIGAA platform.
         """
         
         session = requests.Session()
@@ -100,7 +79,3 @@ class NotValidDomain(Exception):
     """
     def __init___(self, message):
         super(NotValidDomain, self).__init__(message)
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
