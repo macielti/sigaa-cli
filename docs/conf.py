@@ -23,8 +23,7 @@ copyright = '2019, Bruno do Nascimento Maciel'
 author = 'Bruno do Nascimento Maciel'
 
 # The full version, including alpha/beta/rc tags
-import poetry_version 
-release = str(poetry_version.extract(source_file="../pyproject.toml"))
+release = '0.3.1'
 
 
 # -- General configuration ---------------------------------------------------

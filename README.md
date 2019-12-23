@@ -1,4 +1,4 @@
-# sigaa-cli [![Build Status](https://travis-ci.com/macielti/sigaa-cli.svg?branch=master)](https://travis-ci.com/macielti/sigaa-cli) ![Python 2.7, 3.5, 3.6, 3.7](https://img.shields.io/badge/python-2.7%2C%203.5%2C%203.6%2C%203.7-blue.svg)
+# sigaa-cli [![Build Status](https://travis-ci.com/macielti/sigaa-cli.svg?branch=master)](https://travis-ci.com/macielti/sigaa-cli) ![Python 2.7, 3.5, 3.6, 3.7](https://img.shields.io/badge/python-2.7%2C%203.5%2C%203.6%2C%203.7-blue.svg) ![Build Docs Status](https://readthedocs.org/projects/sigaa-cli/badge/?version=latest)
 
 Módulo Python (não oficial) para servir como base para o desenvolvimento de um Command Line Interface para a plataforma SIGAA.
 
@@ -20,7 +20,7 @@ Funcionalidades Previstas:
 
 **Observação**: Novas funcionalidades podem ser solicitadas através da abertura de uma *nova issue* ou de um *pull request*.
 
--  [X] Autenticação com a plataforma online
+-  [x] Autenticação com a plataforma online
 
 	- [x] Gerar um id de sessão não autencicado;
 
