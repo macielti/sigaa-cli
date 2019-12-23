@@ -15,6 +15,7 @@ class API:
     def __init__(self, domain="sigaa.ufpi.br"):
         self._domain = domain
         self.__session = API.generate_session(self._domain)
+        self.__auth = False
 
     def authenticate(self, username, passwd):
         """
@@ -43,6 +44,7 @@ class API:
         r = self.__session.post(url, data=pyload, stream=True)
         
         if "rio e/ou senha inv" not in r.text:
+            self.__auth = True
             return True
             
         return False
@@ -60,6 +62,22 @@ class API:
         {'JSESSIONID': '86A4C148844BCD2684011B45348D6294.jb06'}
         """
         return self.__session.cookies.get_dict()
+    
+    def is_authenticated(self):
+        """
+        Method that returns the status for the authentication of the session.
+        
+        :return: True if you are authenticated or False if not.
+        :rtype: Boolean
+
+        :todo: More sofisticated verification via request.
+
+        >>> from sigaa.api import API
+        >>> api = API('sigaa.ufma.br')
+        >>> api.is_authenticated()
+        False
+        """
+        return self.__auth
 
 
     @staticmethod

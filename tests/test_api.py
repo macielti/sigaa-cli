@@ -49,6 +49,17 @@ class TestAPI(unittest.TestCase):
         # test exceptions
         with self.assertRaises(sigaa.api.NotValidDomain):
             API.generate_session("google.com")
+    
+    def test_is_authenticated(self):
+        # ufpi
+        api = API("sigaa.ufpi.br")
+        result = api.is_authenticated()
+        self.assertFalse(result)
+
+        # ufma
+        api = API("sigaa.ufma.br")
+        result = api.is_authenticated()
+        self.assertFalse(result)
 
 if __name__ == '__main__':
     unittest.main()
