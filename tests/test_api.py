@@ -12,18 +12,37 @@ from sigaa.api import API
 class TestAPI(unittest.TestCase):
 
     def test_authenticate(self):
+        # ufpi
         api = API("sigaa.ufpi.br")
+        result = api.authenticate('foo', 'bar')
+        self.assertFalse(result)
+
+        # ufma
+        api = API("sigaa.ufma.br")
         result = api.authenticate('foo', 'bar')
         self.assertFalse(result)
     
     def test_get_sesson_id(self):
+        # ufpi
         api = API("sigaa.ufpi.br")
+        result = api.get_sesson_id()
+        # key JSESSIONID
+        self.assertIn('JSESSIONID', result.keys())
+
+        # ufma
+        api = API("sigaa.ufma.br")
         result = api.get_sesson_id()
         # key JSESSIONID
         self.assertIn('JSESSIONID', result.keys())
     
     def test_generate_session(self):
+        # ufpi
         result = API.generate_session("sigaa.ufpi.br")
+        self.assertIsInstance(result, requests.sessions.Session)
+        self.assertIn('JSESSIONID', result.cookies.keys())
+
+        # ufma
+        result = API.generate_session("sigaa.ufma.br")
         self.assertIsInstance(result, requests.sessions.Session)
         self.assertIn('JSESSIONID', result.cookies.keys())
 
