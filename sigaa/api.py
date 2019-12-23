@@ -8,6 +8,9 @@ class API:
     :type domain: String
 
     :attr session: Holds a :class:`requests.Session()` object.
+
+    >>> from sigaa.api import API
+    >>> api = API("sigaa.ufma.br")
     """
     def __init__(self, domain="sigaa.ufpi.br"):
         self._domain = domain
@@ -24,6 +27,11 @@ class API:
 
         :return: **True** for success or **False** for failure.
         :rtype: **Boolean**
+
+        >>> from sigaa.api import API
+        >>> api = API("sigaa.ufpi.br")
+        >>> api.authenticate("username", "password")
+        False or True
         """
 
         url = 'https://%s/sigaa/logar.do?dispatch=logOn' % self._domain
@@ -45,6 +53,11 @@ class API:
 
         :return: A cookie dictionary.
         :rtype: dict
+
+        >>> from sigaa.api import API
+        >>> api = API("sigaa.ufpi.br")
+        >>> api.get_session_id()
+        {'JSESSIONID': '86A4C148844BCD2684011B45348D6294.jb06'}
         """
         return self.__session.cookies.get_dict()
 
@@ -58,9 +71,12 @@ class API:
         :type domain: String
 
         :return: An unauthenticated session.
-        :rtype: **requests.Session()**
+        :rtype: **requests.session.Session()**
 
         :raises NotValidDomain: An error occurred when a not valid sigaa platform domain is suplied as positional parameter.
+
+        >>> from sigaa.api import API
+        >>> session = API.generate_session("sigaa.ufpi.com")
         """
         
         session = requests.Session()
@@ -76,6 +92,12 @@ class NotValidDomain(Exception):
     """
     Is raised when a not valid sigaa platform domain is suplied 
     as parameter to the sigaa.API.generate_session() static method.
+
+    >>> from sigaa.api import API
+    >>> API.generate_session("google.com")
+    Traceback (most recent call last):
+     ...
+    sigaa.api.NotValidDomain: Not valid sigaa platform domain.
     """
     def __init___(self, message):
         super(NotValidDomain, self).__init__(message)
