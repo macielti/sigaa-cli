@@ -26,6 +26,8 @@ Funcionalidades Previstas:
 
 	- [x] Autenticar o id de sessão gerado anteriormente;
 
+	- [x] Acessar Cookies da sessão;
+
 - [ ] Listar Turmas ativas.
 
 	- [ ] Listar turmas ativas do estudante;
