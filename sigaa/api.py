@@ -1,4 +1,5 @@
 import requests
+import re
 
 class API:
     """ 
@@ -15,7 +16,7 @@ class API:
     def __init__(self, domain="sigaa.ufpi.br"):
         self._domain = domain
         self.__session = API.generate_session(self._domain)
-        self.__auth = False
+        self.__j_id = None
 
     def authenticate(self, username, passwd):
         """
@@ -99,7 +100,7 @@ class API:
         r = self.__session.get("https://%s/sigaa/verPortalDiscente.do" % self._domain, allow_redirects=True, stream=True)
         if "o foi expirada. " not in r.text:
             return True
-        return False 
+        return False
 
 
     @staticmethod
@@ -127,6 +128,23 @@ class API:
             raise NotValidDomain("Not valid sigaa platform domain.")
 
         return session
+
+    @staticmethod
+    def get_j_id(html_page):
+        """
+        This static method recieve a html source code of a response and return the **j_id** parameter
+        that is required to do some actions inside the platform. 
+        
+        You are not expected to use this method but if you need, there is...
+
+        :param html_page: HTML response text.
+        :type domain: String
+
+        :return: The j_id parameter like 'j_id3'
+        :rtype: String
+        """
+        # return the first ocurrence of the 'j_id'
+        return re.findall(r"j_id+\d{1,4}", html_page)[0] 
 
 class NotValidDomain(Exception):
     """

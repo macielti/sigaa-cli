@@ -1,5 +1,6 @@
 import unittest
 import requests
+import re
 
 import os
 import sys
@@ -73,6 +74,17 @@ class TestAPI(unittest.TestCase):
         api = API("sigaa.ufma.br")
         result = api.is_authenticated()
         self.assertFalse(result)
+    
+    def test_get_j_id(self):
+        # ufpi
+        r = requests.get("https://sigaa.ufpi.br/sigaa/public/home.jsf")
+        result = API.get_j_id(r.text)
+        self.assertEqual(result, "j_id1")
+
+        # ufma
+        r = requests.get("https://sigaa.ufma.br/sigaa/public/home.jsf")
+        result = API.get_j_id(r.text)
+        self.assertRegex(result, "j_id1")
 
 if __name__ == '__main__':
     unittest.main()
