@@ -10,7 +10,7 @@ class API:
     :attr session: Holds a :class:`requests.Session()` object.
 
     >>> from sigaa.api import API
-    >>> api = API("sigaa.ufma.br")
+    >>> api = API("sigaa.ufma.br") # already executes API.generate_session(domain)
     """
     def __init__(self, domain="sigaa.ufpi.br"):
         self._domain = domain
@@ -49,6 +49,25 @@ class API:
             
         return False
     
+    def deauthenticate(self):
+        """
+        Method to execute the logOff operation on SIGAA platform. 
+        It will return True is the operation was executed with success.
+
+        :return: **True** if the session was deauthenticated with success or **False** if it fails.
+        :rtype: Boolean
+
+        >>> from sigaa.api import API
+        >>> api = API('sigaa.ufma.br')
+        >>> api.authenticate('macielti', 'PaSsWoRd')
+        False
+        >>> api.deauthenticate()
+        True
+        """
+        # logOff operation from 'discente' portal.
+        r = self.__session.get("https://%s/sigaa/logar.do?dispatch=logOff" % self._domain, allow_redirects=True, stream=True)
+        return not self.is_authenticated()
+    
     def get_sesson_id(self):
         """
         Method that returns a dictionary with the JSESSIONID and cookies.
@@ -65,7 +84,7 @@ class API:
     
     def is_authenticated(self):
         """
-        Method that returns the status for the authentication of the session.
+        Method that returns the if the session is authenticated or not.
         
         :return: True if you are authenticated or False if not.
         :rtype: Boolean
@@ -77,7 +96,10 @@ class API:
         >>> api.is_authenticated()
         False
         """
-        return self.__auth
+        r = self.__session.get("https://%s/sigaa/verPortalDiscente.do" % self._domain, allow_redirects=True, stream=True)
+        if "o foi expirada. " not in r.text:
+            return True
+        return False 
 
 
     @staticmethod

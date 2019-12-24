@@ -22,6 +22,19 @@ class TestAPI(unittest.TestCase):
         result = api.authenticate('foo', 'bar')
         self.assertFalse(result)
     
+    def test_deauthenticate(self):
+        # ufpi
+        api = API("sigaa.ufpi.br")
+        api.authenticate('foo', 'bar')
+        result = api.deauthenticate()
+        self.assertTrue(result)
+
+        # ufma
+        api = API("sigaa.ufma.br")
+        api.authenticate('foo', 'bar')
+        result = api.deauthenticate()
+        self.assertTrue(result)
+    
     def test_get_sesson_id(self):
         # ufpi
         api = API("sigaa.ufpi.br")
