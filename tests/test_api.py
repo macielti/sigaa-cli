@@ -84,7 +84,7 @@ class TestAPI(unittest.TestCase):
         # ufma
         r = requests.get("https://sigaa.ufma.br/sigaa/public/home.jsf")
         result = API.get_j_id(r.text)
-        self.assertRegex(result, "j_id1")
+        self.assertEqual(result, "j_id1")
 
 if __name__ == '__main__':
     unittest.main()
