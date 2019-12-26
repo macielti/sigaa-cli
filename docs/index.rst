@@ -8,6 +8,14 @@ actions inside the SIGAA platform, independent of the university.
    :maxdepth: 2
    
    api
+   mailbox
+
+.. warning::
+    The way that the SIGAA server works is storing the state of the session in the backend 
+    this makes the development a litle bit difficult.
+    
+    What require that we make a serie of requests to do some operations.
+
 
 Instalation
 ###########

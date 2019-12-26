@@ -1,5 +1,10 @@
 import requests
 import re
+from tqdm import tqdm
+from .mailbox import MailBox
+import sigaa.util as util
+
+
 
 class API:
     """ 
@@ -13,10 +18,12 @@ class API:
     >>> from sigaa.api import API
     >>> api = API("sigaa.ufma.br") # already executes API.generate_session(domain)
     """
+
     def __init__(self, domain="sigaa.ufpi.br"):
-        self._domain = domain
-        self.__session = API.generate_session(self._domain)
+        self.__domain = domain
+        self.__session = util.generate_session(self.__domain)
         self.__j_id = None
+        self.__j_id_jsp = None
 
     def authenticate(self, username, passwd):
         """
@@ -36,20 +43,21 @@ class API:
         False or True
         """
 
-        url = 'https://%s/sigaa/logar.do?dispatch=logOn' % self._domain
+        url = 'https://%s/sigaa/logar.do?dispatch=logOn' % self.__domain
         pyload = {
-            'user.login':username,
-            'user.senha':passwd
+            'user.login': username,
+            'user.senha': passwd
         }
 
-        r = self.__session.post(url, data=pyload, stream=True)
-        
+        r = self.__session.post(url, data=pyload)
+
         if "rio e/ou senha inv" not in r.text:
-            self.__auth = True
+            # extract j_id parameters
+            (self.__j_id, self.__j_id_jsp) = util.get_j_id_and_jsp(r.text)
             return True
-            
+
         return False
-    
+
     def deauthenticate(self):
         """
         Method to execute the logOff operation on SIGAA platform. 
@@ -66,96 +74,97 @@ class API:
         True
         """
         # logOff operation from 'discente' portal.
-        r = self.__session.get("https://%s/sigaa/logar.do?dispatch=logOff" % self._domain, allow_redirects=True, stream=True)
+        r = self.__session.get("https://%s/sigaa/logar.do?dispatch=logOff" %
+                               self.__domain, allow_redirects=True)
         return not self.is_authenticated()
-    
-    def get_sesson_id(self):
-        """
-        Method that returns a dictionary with the JSESSIONID and cookies.
 
-        :return: A cookie dictionary.
-        :rtype: dict
-
-        >>> from sigaa.api import API
-        >>> api = API("sigaa.ufpi.br")
-        >>> api.get_session_id()
-        {'JSESSIONID': '86A4C148844BCD2684011B45348D6294.jb06'}
+    def get_session(self):
         """
-        return self.__session.cookies.get_dict()
-    
+        Method that returns a requests.Session() object.
+        """
+        return self.__session
+
+    def get_domain(self):
+        """
+        Method that returns the setted domain.
+        """
+        return self.__domain
+
     def is_authenticated(self):
         """
         Method that returns the if the session is authenticated or not.
-        
+
         :return: True if you are authenticated or False if not.
         :rtype: Boolean
-
-        :todo: More sofisticated verification via request.
 
         >>> from sigaa.api import API
         >>> api = API('sigaa.ufma.br')
         >>> api.is_authenticated()
         False
         """
-        r = self.__session.get("https://%s/sigaa/verPortalDiscente.do" % self._domain, allow_redirects=True, stream=True)
+        r = self.__session.get("https://%s/sigaa/verPortalDiscente.do" %
+                               self.__domain, allow_redirects=True)
         if "o foi expirada. " not in r.text:
+            # extract j_id parameters
+            (self.__j_id, self.__j_id_jsp) = util.get_j_id_and_jsp(r.text)
             return True
         return False
-
-
-    @staticmethod
-    def generate_session(domain):
-        """
-        A static method that recieve a domain string and return a **requests.Session()** object with cookies setted.
-
-        :param domain: The platform domain of the university server. Need to be the same as the domain inputed in the class instatiation.
-        :type domain: String
-
-        :return: An unauthenticated session.
-        :rtype: **requests.session.Session()**
-
-        :raises NotValidDomain: An error occurred when a not valid sigaa platform domain is suplied as positional parameter.
-
-        >>> from sigaa.api import API
-        >>> session = API.generate_session("sigaa.ufpi.com")
-        """
         
-        session = requests.Session()
-        r = session.get("https://%s/sigaa/verTelaLogin.do" % domain, allow_redirects=True, stream=True)
-
-        # verify if the domain really apoint to a valid SIGAA platform.
-        if 'SIGAA' not in r.text:
-            raise NotValidDomain("Not valid sigaa platform domain.")
-
-        return session
-
-    @staticmethod
-    def get_j_id(html_page):
+    def get_all_users(self):
         """
-        This static method recieve a html source code of a response and return the **j_id** parameter
-        that is required to do some actions inside the platform. 
+        Method to scrap the fullname and username of all the users of the platform.
+
+        :return: List of users infos. 
+        :rtype: list. Example: ['BRUNO DO NASCIMENTO MACIEL (macielti)', ...]
+        """
+
+        chars = [
+            'a',
+            'b',
+            'c',
+            'd',
+            'e',
+            'f',
+            'g',
+            'h',
+            'i',
+            'j',
+            'k',
+            'l',
+            'm',
+            'n',
+            'o',
+            'p',
+            'q',
+            'r',
+            's',
+            't',
+            'u',
+            'v',
+            'w',
+            'x',
+            'y',
+            'z',
+
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '0',
+
+        ]
+
+        mail_box = MailBox(self.__session, self.__domain)
+        mail_box.goto_mainbox_portal()
+        mail_box.goto_send_message()
         
-        You are not expected to use this method but if you need, there is...
-
-        :param html_page: HTML response text.
-        :type domain: String
-
-        :return: The j_id parameter like 'j_id3'
-        :rtype: String
-        """
-        # return the first ocurrence of the 'j_id'
-        return re.findall(r"j_id+\d{1,4}", html_page)[0] 
-
-class NotValidDomain(Exception):
-    """
-    Is raised when a not valid sigaa platform domain is suplied 
-    as parameter to the sigaa.API.generate_session() static method.
-
-    >>> from sigaa.api import API
-    >>> API.generate_session("google.com")
-    Traceback (most recent call last):
-     ...
-    sigaa.api.NotValidDomain: Not valid sigaa platform domain.
-    """
-    def __init___(self, message):
-        super(NotValidDomain, self).__init__(message)
+        users = []
+        for char in tqdm(chars):
+            users = users + mail_box.search(char)
+        
+        return sorted(set(users))
