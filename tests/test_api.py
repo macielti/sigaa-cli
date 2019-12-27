@@ -7,7 +7,10 @@ import sys
 path = os.path.join(os.path.dirname(__file__), os.pardir)
 sys.path.append(path)
 from sigaa.api import API
+from sigaa.api import MailBox
 import sigaa
+
+from creds import login
 
 class TestAPI(unittest.TestCase):
 
@@ -35,7 +38,12 @@ class TestAPI(unittest.TestCase):
         api = API("sigaa.ufpi.br")
         result = api.is_authenticated()
         self.assertFalse(result)
-
+    
+    def test_send_message(self):
+        api = API("sigaa.ufpi.br")
+        api.authenticate(login['username'], login['passwd'])
+        result = api.send_message(['BRUNO DO NASCIMENTO MACIEL (macielti)'], 'Unittest', "Unittest for sigaa.api.API.send_message")
+        self.assertTrue(result)
 
 if __name__ == '__main__':
     unittest.main()

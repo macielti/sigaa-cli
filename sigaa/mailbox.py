@@ -81,12 +81,16 @@ class MailBox:
         return False
 
 
-    def search(self, query):
+    def search(self, query, subject="", message=""):
         """
         Search the users using the AJAX requisition.
 
-        :param query: Search users by partial or full match on username. 
+        :param query: Search users by partial or full match on username. Example: "macielti"
         :type query: String
+        :param subject: Subject of the message **(optional)**.
+        :type subject: String
+        :param message: Message text **(optional)**.
+        :type message: String
 
         :return: List of users info provided by the platform.
         :rtype: list
@@ -109,8 +113,8 @@ class MailBox:
             'form': 'form',
             'form:usuarioAuto': query,
             'form:suggestion_selection': '',
-            'form:assunto': '',
-            'form:texto': '',
+            'form:assunto': subject,
+            'form:texto': message,
             'form:nome': '',
             'form:arquivo2': '',
             'javax.faces.ViewState': self.__j_id,
@@ -124,3 +128,114 @@ class MailBox:
         users = re.findall(r"(?:\w+\s)+\(.+?\)", r.text)
 
         return sorted(set(users))
+    
+    def simulate_user_selection(self, user, subject="", message=""):
+        """
+        Simulate the select operation. It's required when adding an user as recipient
+        of a message. Created to be used inside the `MailBox.add_user_recipient()` method.
+
+        :param user: User to simulate seletion. Example: "BRUNO DO NASCIMENTO MACIEL (macielti)"
+        :type user: String
+        :param subject: Subject of the message **(optional)**.
+        :type subject: String
+        :param message: Message text **(optional)**.
+        :type message: String
+       
+        :return: **True** for success or **False** for failure.
+        :rtype: **Boolean**
+        """
+        url = "https://www.%s/cxpostal/envia_mensagem.jsf" % self.__domain
+        payload = {
+            'AJAXREQUEST' : self.__j_id_jsp,
+            'form' : 'form',
+            'form:usuarioAuto' : user, #user complete  data string
+            'form:suggestion_selection' : '0',
+            'form:assunto' : subject,
+            'form:texto' : message,
+            'form:nome'	: '',
+            'form:arquivo2'	: '',
+            'form:confLeitura' : 'on',
+            'form:enviarEmail' : 'on',
+            'javax.faces.ViewState' : self.__j_id,
+            'form:suggestion:%s12' % self.__j_id_jsp[:-1] : 'form:suggestion:%s12' % self.__j_id_jsp[:-1]
+        }
+
+        r = self.__session.post(url, data=payload)
+
+        if "Ajax-Update-Ids" in r.text:
+            return True
+        return False
+
+    def add_user_recipient(self, user, subject="", message=""):
+        """
+        Add user as recipient of the message
+
+        :param user: User to be added as recipient of the message. Example: "BRUNO DO NASCIMENTO MACIEL (macielti)"
+        :type user: String
+        :param subject: Subject of the message **(optional)**.
+        :type subject: String
+        :param message: Message text **(optional)**.
+        :type message: String
+
+        :return: **True** for success or **False** for failure.
+        :rtype: **Boolean**
+        """
+        url = "https://www.%s/cxpostal/envia_mensagem.jsf" % self.__domain
+        payload = {
+            'AJAXREQUEST' : self.__j_id_jsp,
+            'form' : 'form',
+            'form:usuarioAuto' : user,
+            'form:suggestion_selection' : '',
+            'form:assunto' : subject,
+            'form:texto' : message,
+            'form:nome' : '',
+            'form:arquivo2' : '',
+            'form:confLeitura' : 'on',
+            'form:enviarEmail' : 'on',
+            'javax.faces.ViewState' : self.__j_id,
+            'form:addDestinatario' : 'form:addDestinatario'
+        }
+
+        self.search(user.split(' ')[-1].strip('(').strip(')')) # only the username part
+        self.simulate_user_selection(user)
+
+        r = self.__session.post(url, data=payload)
+
+        if user.split(' ')[-1].strip('(').strip(')') in r.text:
+            return True
+        return False
+    
+    def send_message(self, subject, message):
+        """
+        Send message to previusly added users.
+        
+        Created to be used mainly by the **sigaa.api.API**, use only if you know what you are doing.
+
+        :param subject: Subject of the message.
+        :type subject: String
+        :param message: Message text.
+        :type message: String
+
+        :return: **True** for success or **False** for failure.
+        :rtype: **Boolean**
+        """
+        url = "https://www.%s/cxpostal/envia_mensagem.jsf" % self.__domain
+        payload = {
+            'form' : 'form',
+            'form:usuarioAuto' : '',
+            'form:suggestion_selection' : '',
+            'form:assunto' : subject,
+            'form:texto' : message,
+            'form:nome' : '',
+            'form:arquivo2' : '',
+            'form:confLeitura' : 'on',
+            'form:enviarEmail' : 'on',
+            'form:btnBotaoCancelar' : 'Enviar',
+            'javax.faces.ViewState' : self.__j_id,
+        }
+
+        r = self.__session.post(url, data=payload)
+
+        if 'Mensagem enviada com sucesso' in r.text:
+            return True
+        return False

@@ -168,3 +168,40 @@ class API:
             users = users + mail_box.search(char)
         
         return sorted(set(users))
+
+    def send_message(self, users, subject, message):
+        """
+        Send message to a list of users.
+        
+        :param users: A list of users. Example: ["BRUNO DO NASCIMENTO MACIEL (macielti)", ...]
+        :type users: list
+        :param subject: Subject of the message.
+        :type subject: String
+        :param message: Message text.
+        :type message: String
+
+        :return: **True** for success or **False** for failure.
+        :rtype: **Boolean**
+
+        >>> from sigaa.api import API
+        >>> api = API()
+        >>> api.authenticate('macielti', '1aT6SwWMgWvP')
+        True
+        >>> api.send_message(["BRUNO DO NASCIMENTO MACIEL (macielti)"], "Subject", "Message Text")
+        True
+        """
+
+        mail_box = MailBox(self.__session, self.__domain)
+        mail_box.goto_mainbox_portal()
+        mail_box.goto_send_message()
+
+        for user in tqdm(users):
+            result = mail_box.add_user_recipient(user)
+            if result == False:
+                print("[Error] - User", user, "NOT ADDED.")
+                return False # exit the method if a user was not added succesfuly.
+
+        return mail_box.send_message(subject, message)
+
+
+
