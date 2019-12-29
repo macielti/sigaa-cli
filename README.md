@@ -26,13 +26,17 @@ Funcionalidades Previstas:
 
 	- [x] Autenticar o id de sessão gerado anteriormente;
 
+	- [x] Desautenticar um id de sessão gerado anteriormente;
+
 	- [x] Acessar Cookies da sessão;
 	
 	- [x] Verificar status da authenticação do sistema;
 
-- [ ] Listar Turmas ativas.
+- [ ] Extrair info sobre os usuários da plataforma.
 
-	- [ ] Listar turmas ativas do estudante;
+	- [x] Pegar uma lista com todos os nomes completos e nome de usuários da plataforma;
+
+	- [] Pesquisar os nomes completos de usuários pelo seu username.
 
 - [ ] Listar Tarefas
 
