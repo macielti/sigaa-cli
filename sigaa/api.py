@@ -5,7 +5,6 @@ from .mailbox import MailBox
 import sigaa.util as util
 
 
-
 class API:
     """ 
     Class to instantiate the API object.
@@ -109,7 +108,7 @@ class API:
             (self.__j_id, self.__j_id_jsp) = util.get_j_id_and_jsp(r.text)
             return True
         return False
-        
+
     def get_all_users(self):
         """
         Method to scrap the fullname and username of all the users of the platform.
@@ -162,17 +161,17 @@ class API:
         mail_box = MailBox(self.__session, self.__domain)
         mail_box.goto_mainbox_portal()
         mail_box.goto_send_message()
-        
+
         users = []
         for char in tqdm(chars):
             users = users + mail_box.search(char)
-        
+
         return sorted(set(users))
 
     def send_message(self, users, subject, message):
         """
         Send message to a list of users.
-        
+
         :param users: A list of users. Example: ["BRUNO DO NASCIMENTO MACIEL (macielti)", ...]
         :type users: list
         :param subject: Subject of the message.
@@ -199,9 +198,7 @@ class API:
             result = mail_box.add_user_recipient(user)
             if result == False:
                 print("[Error] - User", user, "NOT ADDED.")
-                return False # exit the method if a user was not added succesfuly.
+                # exit the method if a user was not added succesfuly.
+                return False
 
         return mail_box.send_message(subject, message)
-
-
-
