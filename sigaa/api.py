@@ -108,10 +108,47 @@ class API:
             (self.__j_id, self.__j_id_jsp) = util.get_j_id_and_jsp(r.text)
             return True
         return False
+    
+    def search_user(self, query):
+        """
+        Search for a username or fullname of a user, it returns a list of users info match.
+        It will search only from the start to th end of the query, it won't search from the middle of the users fullname
+        or username.
+
+        :param query: Beginning of a username or fullname.
+        :type query: String
+
+        :return: List of users infos. 
+        :rtype: list. Example: ['BRUNO DO NASCIMENTO MACIEL (macielti)', ...]
+        """
+
+        mail_box = MailBox(self.__session, self.__domain)
+        mail_box.goto_mainbox_portal()
+        mail_box.goto_send_message()
+
+        return mail_box.search(query)
 
     def get_all_users(self):
         """
         Method to scrap the fullname and username of all the users of the platform.
+        
+        .. warning::
+            This process can be a little slow, like up to 20 minutes, but this can be fast like 2 minutes. 
+            This will depends on a number of factors like the total number of students, 
+            the load of the server, your internet connection.
+            
+        
+        You can use Python Generators to iterate more efficientely combined with Threads,
+        just convert the returned list to a generator.
+
+        Example of how to convert a list in to a generator:
+
+        >>> from sigaa.api import API
+        >>> api = API()
+        >>> api.authenticate('macielti', 'Si6Dqr1biY1a')
+        >>> users = api.get_all_users()
+        >>> ( user for user in users )
+        <generator object <genexpr> at 0x7f366e97a678>
 
         :return: List of users infos. 
         :rtype: list. Example: ['BRUNO DO NASCIMENTO MACIEL (macielti)', ...]

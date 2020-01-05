@@ -34,7 +34,6 @@ class TestAPI(unittest.TestCase):
         self.assertIsInstance(result, requests.Session)
 
     def test_is_authenticated(self):
-        # ufpi
         api = API("sigaa.ufpi.br")
         result = api.is_authenticated()
         self.assertFalse(result)
@@ -44,6 +43,12 @@ class TestAPI(unittest.TestCase):
         api.authenticate(login['username'], login['passwd'])
         result = api.send_message(['BRUNO DO NASCIMENTO MACIEL (macielti)'], 'Unittest', "Unittest for sigaa.api.API.send_message")
         self.assertTrue(result)
+
+    def test_search_user(self):
+        api = API("sigaa.ufpi.br")
+        api.authenticate(login['username'], login['passwd'])
+        result = api.search_user('macielti')
+        self.assertEqual(result , ['BRUNO DO NASCIMENTO MACIEL (macielti)'])
 
 if __name__ == '__main__':
     unittest.main()

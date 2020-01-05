@@ -10,5 +10,3 @@ install:
   - pip install tqdm
 script:
   - python tests/test_api.py
-  - python tests/test_mailbox.py
-  - python tests/test_util.py

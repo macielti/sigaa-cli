@@ -32,11 +32,11 @@ Funcionalidades Previstas:
 	
 	- [x] Verificar status da authenticação do sistema;
 
-- [ ] Extrair info sobre os usuários da plataforma.
+- [x] Extrair info sobre os usuários da plataforma.
 
 	- [x] Pegar uma lista com todos os nomes completos e nome de usuários da plataforma;
 
-	- [] Pesquisar os nomes completos de usuários pelo seu username.
+	- [x] Pesquisar os nomes completos de usuários pelo seu username e vice-versa.
 
 - [ ] Listar Tarefas
 
